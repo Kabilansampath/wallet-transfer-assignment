@@ -2,6 +2,11 @@
 
 Describe your solution briefly.
 
+## AI disclosure
+
+Detail how you used AI to help with your submission (including the tools you used, how
+you used them and what your prompts were).
+
 ## Schema Design
 
 Describe the tables, constraints, and indexes you introduced.
