@@ -4,14 +4,18 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"wallet-transfer/internal/models"
-	"wallet-transfer/migrations"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+
+	"wallet-transfer/internal/models"
+	"wallet-transfer/internal/handler"
+	"wallet-transfer/internal/repository"
+	"wallet-transfer/internal/service"
+	"wallet-transfer/migrations"
 )
 
 func main() {
@@ -36,8 +40,13 @@ func main() {
 
 	migrations.SeedWallets(db)
 
+	repo := repository.NewRepository(db)
+	svc := service.NewTransferService(db, repo)
+	h := handler.NewTransferHandler(svc)
+
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
+	r.POST("/transfers", h.CreateTransfer)
 
 	port := os.Getenv("PORT")
 	if port == "" {
